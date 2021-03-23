@@ -1,22 +1,30 @@
 /*----- constants -----*/
 const prompts = ["Player 1's Move", "Player 2's Move", "Player 1 Wins", "Player 2 Wins", "Tie Game"]
 
-const p1houses = [0, 0, 0, 0, 0, 0];
-const p2houses = [0, 0, 0, 0, 0, 0];
-const playerBanks = [0, 0]
+//create 1 array for whole board
+const board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+//set player objects with clickable squares and their bank
+// const player1 ={
+//     clickableSquares: ,
+//     bank: ,
+// }
+// const player2 ={
+//     clickableSquares: ,
+//     bank: ,
+// }
 
 /*----- app's state (variables) -----*/
-let p1Hand, p2Hand;
+let playerHand
 
- 
+
 /*----- cached element references -----*/
 const prompt = document.querySelector('.prompt');
 
-const banks = document.querySelectorAll('.bank');
+const banks = document.querySelectorAll('.bank');//dont need?
 const p1BankDisplay = document.querySelector('#p1-bank');
 const p2BankDisplay = document.querySelector('#p2-bank');
 
-const scores = document.querySelectorAll('.current-score');
+const scores = document.querySelectorAll('.current-score');//dont need?
 const p1Score = document.querySelector('#p1-score');
 const p2Score = document.querySelector('#p2-score');
 
@@ -34,35 +42,31 @@ const p2h3Display = document.querySelector('#p2h3');
 const p2h2Display = document.querySelector('#p2h2');
 const p2h1Display = document.querySelector('#p2h1');
 
-const resetButton = document.querySelector('button');
+const resetButton = document.querySelector('button');//dont need?
 
 /*----- event listeners -----*/
 houses.forEach(house =>
     house.addEventListener('click', playerTurn)
 );
 
-document.querySelector('button').addEventListener('click', intitialize);
+document.querySelector('button').addEventListener('click', initialize);
 
 /*----- functions -----*/
-function intitialize() {
+function initialize() {
     prompt.innerHTML = prompts[0];
-    p1houses.fill(4);
-    p2houses.fill(4);
-    playerBanks.fill(0);
+    board.fill(4);
+    board[6] = 0;
+    board[13] = 0;
     render();
 }
 
 function playerTurn(evt) {
     //Pick a house from your side to tax
     let clicked = evt.target;
-    p1Hand = clicked.innerHTML
-    console.log(p1Hand)
-    console.log(clicked.classList);
-    console.log(clicked.id.split('')[3])
-
-    //Remove all money from that house
+    console.log(clicked)
     //Take that amount in your hand
-    //Place $1 in each house moving counter clockwise (setInterval?)
+    //Remove all money from that house
+    //Place $1 in each house moving counter clockwise
         //Include your bank, but not your opponent's
     //Continue until your hand is empty
     //If your last $ lands in your bank
@@ -76,33 +80,33 @@ function playerTurn(evt) {
     //Else change prompt to next player's move
       //If player 1 just went, set prompt to [1]
       //If player 2 just went, set prompt to [0]
+    render();
 }
 
 function render () {
     //take all variable and make inner HTML = '$' + value
-    p1h1Display.innerHTML = `$${p1houses[0]}`;
-    p1h2Display.innerHTML = `$${p1houses[1]}`;
-    p1h3Display.innerHTML = `$${p1houses[2]}`;
-    p1h4Display.innerHTML = `$${p1houses[3]}`;
-    p1h5Display.innerHTML = `$${p1houses[4]}`;
-    p1h6Display.innerHTML = `$${p1houses[5]}`;
+    p1h1Display.innerHTML = `${board[0]}`;
+    p1h2Display.innerHTML = `${board[1]}`;
+    p1h3Display.innerHTML = `${board[2]}`;
+    p1h4Display.innerHTML = `${board[3]}`;
+    p1h5Display.innerHTML = `${board[4]}`;
+    p1h6Display.innerHTML = `${board[5]}`;
+    p1BankDisplay.innerHTML = `${board[6]}`;
     
-    p2h1Display.innerHTML = `$${p2houses[0]}`;
-    p2h2Display.innerHTML = `$${p2houses[1]}`;
-    p2h3Display.innerHTML = `$${p2houses[2]}`;
-    p2h4Display.innerHTML = `$${p2houses[3]}`;
-    p2h5Display.innerHTML = `$${p2houses[4]}`;
-    p2h6Display.innerHTML = `$${p2houses[5]}`;
+    p2h1Display.innerHTML = `${board[7]}`;
+    p2h2Display.innerHTML = `${board[8]}`;
+    p2h3Display.innerHTML = `${board[9]}`;
+    p2h4Display.innerHTML = `${board[10]}`;
+    p2h5Display.innerHTML = `${board[11]}`;
+    p2h6Display.innerHTML = `${board[12]}`;
+    p2BankDisplay.innerHTML = `${board[13]}`;
     
-    p1BankDisplay.innerHTML = `$${playerBanks[0]}`;
-    p2BankDisplay.innerHTML = `$${playerBanks[1]}`;
-    
-    p1Score.innerHTML = `$${playerBanks[0]}`;
-    p2Score.innerHTML = `$${playerBanks[1]}`;
+    p1Score.innerHTML = `${board[6]}`;
+    p2Score.innerHTML = `${board[13]}`;
 }
 
 
 
 
 
-intitialize();
+initialize();

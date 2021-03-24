@@ -70,6 +70,15 @@ function initialize() {
     render();
 };
 
+function steal(bankIdx, placeHere) {
+    let oppIdx = (12 - placeHere);
+    if (board[oppIdx] > 0) {
+    board[bankIdx] += (board[placeHere] + board[oppIdx]);
+    board[placeHere] = 0;
+    board[oppIdx] = 0;
+    };
+}
+
 function playerTurn(evt) {
     //Pick a non-zero house from your side to tax
     let clicked = evt.target;
@@ -122,19 +131,9 @@ function playerTurn(evt) {
     //If your last $ lands in an empty house on your side
     //Place that $, and all $ from opposite house in your bank
     if (player1Move === true && board[placeHere] === 1 && player1.clickableSquares.includes(placeHere)) {
-        let oppIdx = (12 - placeHere);
-        if (board[oppIdx] > 0) {
-        board[6] += (board[placeHere] + board[oppIdx]);
-        board[placeHere] = 0;
-        board[oppIdx] = 0;
-        };
+        steal(6, placeHere);
     } else if (player1Move !== true && board[placeHere] === 1 && player2.clickableSquares.includes(placeHere)) {
-        let oppIdx = (12 - placeHere);
-        if (board[oppIdx] > 0) {
-        board[13] += (board[placeHere] + board[oppIdx]);
-        board[placeHere] = 0;
-        board[oppIdx] = 0;
-        };
+        steal(13, placeHere);
     };
 
     //If all houses on one side are empty

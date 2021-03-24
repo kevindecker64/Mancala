@@ -5,23 +5,23 @@ const board = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 //set player objects with clickable squares and their bank
 // const player1 ={
 //     clickableSquares: ,
-//     bank: ,
+//     bank: board[6],
 // }
 // const player2 ={
 //     clickableSquares: ,
-//     bank: ,
+//     bank: board[13],
 // }
 
 /*----- app's state (variables) -----*/
 let playerHand
-
+let player1Move = true;
 
 /*----- cached element references -----*/
 const prompt = document.querySelector('.prompt');
 
 const banks = document.querySelectorAll('.bank');//dont need?
-const p1BankDisplay = document.getElementById('13');
-const p2BankDisplay = document.getElementById('6');
+const p1BankDisplay = document.getElementById('6');
+const p2BankDisplay = document.getElementById('13');
 
 const scores = document.querySelectorAll('.current-score');//dont need?
 const p1Score = document.querySelector('#p1-score');
@@ -51,7 +51,16 @@ houses.forEach(house =>
 document.querySelector('button').addEventListener('click', initialize);
 
 /*----- functions -----*/
+function whoGoes() {
+    if (player1Move === true) {
+        prompt.innerHTML = prompts[0];
+    } else {
+        prompt.innerHTML = prompts[1];
+    }
+}
+
 function initialize() {
+    player1Move = true;
     prompt.innerHTML = prompts[0];
     board.fill(4);
     board[6] = 0;
@@ -67,13 +76,24 @@ function playerTurn(evt) {
     playerHand = board[clickedIdx];
     //Remove all money from that house
     board[clickedIdx] = 0;
-    console.log(playerHand)
-    console.log(board)
+
+    console.log('clickedIdx =', clickedIdx);
+    console.log('playerHand =', playerHand);
+    console.log('current board =', board);
 
     //FOR LOOP STARTS HERE//
+    let placeHere = parseInt(clickedIdx) + 1;
+    console.log('placeHere =', placeHere);
     //Place $1 in each house moving counter clockwise
-        //Include your bank, but not your opponent's
     //Continue until your hand is empty
+    for (i = playerHand; i > 0; i--) {
+        if (placeHere === 14) {
+            placeHere = 0;
+        };
+        board[placeHere]++;
+        placeHere++;
+    }
+        //Include your bank, but not your opponent's
     //If your last $ lands in your bank
         //Pick another house from your side to tax
     //If your last $ lands in an empty house on your side
@@ -85,7 +105,9 @@ function playerTurn(evt) {
     //Else change prompt to next player's move
       //If player 1 just went, set prompt to [1]
       //If player 2 just went, set prompt to [0]
-      
+      player1Move = !player1Move;
+      whoGoes();
+
     render();
 }
 

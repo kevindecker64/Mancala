@@ -1,29 +1,29 @@
 /*----- constants -----*/
-const prompts = ["Player 1's Move", "Player 2's Move", "Player 1 Wins", "Player 2 Wins", "Tie Game"]
+const prompts = ["Player 1's Move", "Player 2's Move", "Player 1 Go Again", "Player 2 Go Again", "Player 1 Wins", "Player 2 Wins", "Tie Game"]
 
 const board = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-//set player objects with clickable squares and their bank
+
 const player1 = {
     clickableSquares: [0, 1, 2, 3, 4, 5],
     bank: 6,
-}
+};
 const player2 = {
     clickableSquares: [7, 8, 9, 10, 11, 12],
     bank: 13,
-}
+};
 
 /*----- app's state (variables) -----*/
-let playerHand
+let playerHand;
 let player1Move = true;
 
 /*----- cached element references -----*/
 const prompt = document.querySelector('.prompt');
 
-const banks = document.querySelectorAll('.bank');//dont need?
+// const banks = document.querySelectorAll('.bank');//dont need?
 const p1BankDisplay = document.getElementById('6');
 const p2BankDisplay = document.getElementById('13');
 
-const scores = document.querySelectorAll('.current-score');//dont need?
+// const scores = document.querySelectorAll('.current-score');//dont need?
 const p1Score = document.querySelector('#p1-score');
 const p2Score = document.querySelector('#p2-score');
 
@@ -41,14 +41,14 @@ const p2h3Display = document.getElementById('10');
 const p2h2Display = document.getElementById('11');
 const p2h1Display = document.getElementById('12');
 
-const resetButton = document.querySelector('button');//dont need?
+const resetButton = document.querySelector('button');
 
 /*----- event listeners -----*/
 houses.forEach(house =>
     house.addEventListener('click', playerTurn)
 );
 
-document.querySelector('button').addEventListener('click', initialize);
+resetButton.addEventListener('click', initialize);
 
 /*----- functions -----*/
 function whoGoes() {
@@ -57,7 +57,7 @@ function whoGoes() {
     } else {
         prompt.innerHTML = prompts[1];
     }
-}
+};
 
 function initialize() {
     player1Move = true;
@@ -65,23 +65,35 @@ function initialize() {
     board.fill(4);
     board[6] = 0;
     board[13] = 0;
+    resetButton.innerHTML = 'RESET';
     render();
-}
+};
 
 function playerTurn(evt) {
-    //Pick a house from your side to tax
+    //Pick a non-zero house from your side to tax
     let clicked = evt.target;
-    let clickedIdx = clicked.id;
+    let clickedIdx = parseInt(clicked.id);
+    
+    if (player1Move === true && player2.clickableSquares.includes(clickedIdx)) {
+        return;
+    };
+    if (player1Move !== true && player1.clickableSquares.includes(clickedIdx)) {
+        return;
+    };
+    if (board[clickedIdx] === 0) {
+        return;
+    };
     //Take that amount in your hand
     playerHand = board[clickedIdx];
     //Remove all money from that house
     board[clickedIdx] = 0;
     //FOR LOOP STARTS HERE//
-    let placeHere = parseInt(clickedIdx) + 1;
+    let placeHere = clickedIdx;
     //Place $1 in each house moving counter clockwise
       //Continue until your hand is empty
       //Include your bank, but not your opponent's
     for (i = playerHand; i > 0; i--) {
+        placeHere++;
         if (player1Move === true && placeHere === player2.bank) {
             placeHere = 0;
         };
@@ -92,16 +104,29 @@ function playerTurn(evt) {
             placeHere = 0;
         };
         board[placeHere]++;
-        placeHere++;
-    }
-
+    };
     //If your last $ lands in your bank
         //Pick another house from your side to tax
+    if (player1Move === true && placeHere === 6) {
+        prompt.innerHTML = prompts[2];
+        render();
+        return;
+    } else if (player1Move !== true && placeHere === 13) {
+        prompt.innerHTML = prompts[3];
+        render();
+        return;
+    };
+
     //If your last $ lands in an empty house on your side
+    if (player1Move === true && board[placeHere] === 1 && player1.clickableSquares.includes(placeHere)) {
+        console.log('PLAYA 1 ADD IT UP')
+    } else if (player1Move !== true && board[placeHere] === 1 && player2.clickableSquares.includes(placeHere)) {
+        console.log('PLAYA 2 ADD IT UP')
+    }
         //Place that $, and all $ from opposite house in your bank
     //If all houses on one side are empty
         //Declare winner
-            //P1 win = [2], P2 win = [3], Tie = [4];
+            //P1 win = [4], P2 win = [5], Tie = [6];
         //Change 'RESET' button to 'PLAY AGAIN'
         
     //Else change prompt to next player's move

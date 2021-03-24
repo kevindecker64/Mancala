@@ -118,12 +118,18 @@ function playerTurn(evt) {
     };
 
     //If your last $ lands in an empty house on your side
+    //Place that $, and all $ from opposite house in your bank
     if (player1Move === true && board[placeHere] === 1 && player1.clickableSquares.includes(placeHere)) {
-        console.log('PLAYA 1 ADD IT UP')
+        let oppIdx = (12 - placeHere);
+        board[6] += (board[placeHere] + board[oppIdx]);
+        board[placeHere] = 0;
+        board[oppIdx] = 0;
     } else if (player1Move !== true && board[placeHere] === 1 && player2.clickableSquares.includes(placeHere)) {
-        console.log('PLAYA 2 ADD IT UP')
+        let oppIdx = (12 - placeHere);
+        board[13] += (board[placeHere] + board[oppIdx]);
+        board[placeHere] = 0;
+        board[oppIdx] = 0;
     }
-        //Place that $, and all $ from opposite house in your bank
     //If all houses on one side are empty
         //Declare winner
             //P1 win = [4], P2 win = [5], Tie = [6];

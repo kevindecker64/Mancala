@@ -15,6 +15,7 @@ const player2 = {
 /*----- app's state (variables) -----*/
 let playerHand;
 let player1Move = true;
+let winner = false;
 
 /*----- cached element references -----*/
 const prompt = document.querySelector('.prompt');
@@ -73,7 +74,6 @@ function playerTurn(evt) {
     //Pick a non-zero house from your side to tax
     let clicked = evt.target;
     let clickedIdx = parseInt(clicked.id);
-    
     if (player1Move === true && player2.clickableSquares.includes(clickedIdx)) {
         return;
     };
@@ -83,13 +83,14 @@ function playerTurn(evt) {
     if (board[clickedIdx] === 0) {
         return;
     };
+
     //Take that amount in your hand
     playerHand = board[clickedIdx];
     //Remove all money from that house
     board[clickedIdx] = 0;
-    //FOR LOOP STARTS HERE//
-    let placeHere = clickedIdx;
+
     //Place $1 in each house moving counter clockwise
+    let placeHere = clickedIdx;
       //Continue until your hand is empty
       //Include your bank, but not your opponent's
     for (i = playerHand; i > 0; i--) {
@@ -105,6 +106,7 @@ function playerTurn(evt) {
         };
         board[placeHere]++;
     };
+
     //If your last $ lands in your bank
         //Pick another house from your side to tax
     if (player1Move === true && placeHere === 6) {
@@ -121,24 +123,31 @@ function playerTurn(evt) {
     //Place that $, and all $ from opposite house in your bank
     if (player1Move === true && board[placeHere] === 1 && player1.clickableSquares.includes(placeHere)) {
         let oppIdx = (12 - placeHere);
+        if (board[oppIdx] > 0) {
         board[6] += (board[placeHere] + board[oppIdx]);
         board[placeHere] = 0;
         board[oppIdx] = 0;
+        };
     } else if (player1Move !== true && board[placeHere] === 1 && player2.clickableSquares.includes(placeHere)) {
         let oppIdx = (12 - placeHere);
+        if (board[oppIdx] > 0) {
         board[13] += (board[placeHere] + board[oppIdx]);
         board[placeHere] = 0;
         board[oppIdx] = 0;
-    }
+        };
+    };
+
     //If all houses on one side are empty
+        //Add all remaining $ on opp side to opp total score
+        //Compare total scores
         //Declare winner
             //P1 win = [4], P2 win = [5], Tie = [6];
         //Change 'RESET' button to 'PLAY AGAIN'
+        //return
         
     //Else change prompt to next player's move
       //If player 1 just went, set prompt to [1]
       //If player 2 just went, set prompt to [0]
-    
     player1Move = !player1Move;
     whoGoes();
     render();

@@ -3,14 +3,14 @@ const prompts = ["Player 1's Move", "Player 2's Move", "Player 1 Wins", "Player 
 
 const board = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 //set player objects with clickable squares and their bank
-// const player1 ={
-//     clickableSquares: ,
-//     bank: board[6],
-// }
-// const player2 ={
-//     clickableSquares: ,
-//     bank: board[13],
-// }
+const player1 = {
+    clickableSquares: [0, 1, 2, 3, 4, 5],
+    bank: 6,
+}
+const player2 = {
+    clickableSquares: [7, 8, 9, 10, 11, 12],
+    bank: 13,
+}
 
 /*----- app's state (variables) -----*/
 let playerHand
@@ -76,24 +76,25 @@ function playerTurn(evt) {
     playerHand = board[clickedIdx];
     //Remove all money from that house
     board[clickedIdx] = 0;
-
-    console.log('clickedIdx =', clickedIdx);
-    console.log('playerHand =', playerHand);
-    console.log('current board =', board);
-
     //FOR LOOP STARTS HERE//
     let placeHere = parseInt(clickedIdx) + 1;
-    console.log('placeHere =', placeHere);
     //Place $1 in each house moving counter clockwise
-    //Continue until your hand is empty
+      //Continue until your hand is empty
+      //Include your bank, but not your opponent's
     for (i = playerHand; i > 0; i--) {
+        if (player1Move === true && placeHere === player2.bank) {
+            placeHere = 0;
+        };
+        if (player1Move !== true && placeHere === player1.bank) {
+            placeHere = 7;
+        };
         if (placeHere === 14) {
             placeHere = 0;
         };
         board[placeHere]++;
         placeHere++;
     }
-        //Include your bank, but not your opponent's
+
     //If your last $ lands in your bank
         //Pick another house from your side to tax
     //If your last $ lands in an empty house on your side
@@ -102,12 +103,13 @@ function playerTurn(evt) {
         //Declare winner
             //P1 win = [2], P2 win = [3], Tie = [4];
         //Change 'RESET' button to 'PLAY AGAIN'
+        
     //Else change prompt to next player's move
       //If player 1 just went, set prompt to [1]
       //If player 2 just went, set prompt to [0]
-      player1Move = !player1Move;
-      whoGoes();
-
+    
+    player1Move = !player1Move;
+    whoGoes();
     render();
 }
 

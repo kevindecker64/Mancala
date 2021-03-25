@@ -32,6 +32,7 @@ const prompt = document.querySelector(".prompt");
 const p1BankDisplay = document.getElementById("6");
 const p2BankDisplay = document.getElementById("13");
 
+// const currentScores = document.querySelectorAll('.current-score')
 const p1Score = document.querySelector("#p1-score");
 const p2Score = document.querySelector("#p2-score");
 
@@ -57,23 +58,25 @@ houses.forEach((house) => house.addEventListener("click", playerTurn));
 resetButton.addEventListener("click", initialize);
 
 /*----- functions -----*/
+function initialize() {
+  player1Move = true;
+  winner = false;
+  prompt.innerHTML = prompts[0];
+  p1Score.style.color = "black";
+  p2Score.style.color = "black";
+  board.fill(4);
+  board[6] = 0;
+  board[13] = 0;
+  resetButton.innerHTML = "RESET";
+  render();
+}
+
 function whoGoes() {
   if (player1Move === true) {
     prompt.innerHTML = prompts[0];
   } else {
     prompt.innerHTML = prompts[1];
   }
-}
-
-function initialize() {
-  player1Move = true;
-  winner = false;
-  prompt.innerHTML = prompts[0];
-  board.fill(4);
-  board[6] = 0;
-  board[13] = 0;
-  resetButton.innerHTML = "RESET";
-  render();
 }
 
 function steal(bankIdx, placeHere) {
@@ -103,8 +106,10 @@ function checkEndGame() {
 function declareWinner() {
   if (board[6] > board[13]) {
     prompt.innerHTML = prompts[4];
+    p1Score.style.color = "gold";
   } else if (board[6] < board[13]) {
     prompt.innerHTML = prompts[5];
+    p2Score.style.color = "gold";
   } else if (board[6] === board[13]) {
     prompt.innerHTML = prompts[6];
   }

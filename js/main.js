@@ -77,12 +77,12 @@ function initialize() {
 }
 
 function steal(bankIdx, placeHere) {
-    let oppIdx = 12 - placeHere;
-    if (board[oppIdx] > 0) {
-        board[bankIdx] += board[placeHere] + board[oppIdx];
-        board[placeHere] = 0;
-        board[oppIdx] = 0;
-    }
+  let oppIdx = 12 - placeHere;
+  if (board[oppIdx] > 0) {
+    board[bankIdx] += board[placeHere] + board[oppIdx];
+    board[placeHere] = 0;
+    board[oppIdx] = 0;
+  }
 }
 
 function checkEndGame() {
@@ -111,24 +111,24 @@ function declareWinner() {
 }
 
 function playerTurn(evt) {
-    let clicked = evt.target;
-    let clickedIdx = parseInt(clicked.id);
-    
-    if (player1Move === true && player2.clickableSquares.includes(clickedIdx)) {
-        return;
-    }
-    if (player1Move !== true && player1.clickableSquares.includes(clickedIdx)) {
-        return;
-    }
-    if (board[clickedIdx] === 0) {
-        return;
-    }
-    
-    playerHand = board[clickedIdx];
-    board[clickedIdx] = 0;
-    
-    let placeHere = clickedIdx;
-    for (i = playerHand; i > 0; i--) {
+  let clicked = evt.target;
+  let clickedIdx = parseInt(clicked.id);
+
+  if (player1Move === true && player2.clickableSquares.includes(clickedIdx)) {
+    return;
+  }
+  if (player1Move !== true && player1.clickableSquares.includes(clickedIdx)) {
+    return;
+  }
+  if (board[clickedIdx] === 0) {
+    return;
+  }
+
+  playerHand = board[clickedIdx];
+  board[clickedIdx] = 0;
+
+  let placeHere = clickedIdx;
+  for (i = playerHand; i > 0; i--) {
     placeHere++;
     if (player1Move === true && placeHere === player2.bank) {
       placeHere = 0;
@@ -140,6 +140,20 @@ function playerTurn(evt) {
       placeHere = 0;
     }
     board[placeHere]++;
+  }
+
+  if (
+    player1Move === true &&
+    board[placeHere] === 1 &&
+    player1.clickableSquares.includes(placeHere)
+  ) {
+    steal(6, placeHere);
+  } else if (
+    player1Move !== true &&
+    board[placeHere] === 1 &&
+    player2.clickableSquares.includes(placeHere)
+  ) {
+    steal(13, placeHere);
   }
 
   checkEndGame();
@@ -159,20 +173,6 @@ function playerTurn(evt) {
     prompt.innerHTML = prompts[3];
     render();
     return;
-  }
-
-  if (
-    player1Move === true &&
-    board[placeHere] === 1 &&
-    player1.clickableSquares.includes(placeHere)
-  ) {
-    steal(6, placeHere);
-  } else if (
-    player1Move !== true &&
-    board[placeHere] === 1 &&
-    player2.clickableSquares.includes(placeHere)
-  ) {
-    steal(13, placeHere);
   }
 
   player1Move = !player1Move;

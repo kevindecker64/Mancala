@@ -20,11 +20,11 @@ let winner = false;
 /*----- cached element references -----*/
 const prompt = document.querySelector('.prompt');
 
-// const banks = document.querySelectorAll('.bank');//dont need?
+// const banks = document.querySelectorAll('.bank');// dont need?
 const p1BankDisplay = document.getElementById('6');
 const p2BankDisplay = document.getElementById('13');
 
-// const scores = document.querySelectorAll('.current-score');//dont need?
+// const scores = document.querySelectorAll('.current-score');// dont need?
 const p1Score = document.querySelector('#p1-score');
 const p2Score = document.querySelector('#p2-score');
 
@@ -136,13 +136,14 @@ function playerTurn(evt) {
         steal(13, placeHere);
     };
 
-    //If all houses on one side are empty
-        //Add all remaining $ on opp side to opp total score
-        //Compare total scores
-        //Declare winner
-            //P1 win = [4], P2 win = [5], Tie = [6];
-        //Change 'RESET' button to 'PLAY AGAIN'
-        //return
+    checkWinner()
+    if (winner === true) {
+        declareWinner();
+        resetButton.innerHTML = 'PLAY AGAIN?';
+        render();
+        return;
+    }
+
         
     //Else change prompt to next player's move
       //If player 1 just went, set prompt to [1]
@@ -152,8 +153,37 @@ function playerTurn(evt) {
     render();
 }
 
+function checkWinner() {
+    let player1Houses = board.slice(0, 6);
+    let player2Houses = board.slice(7, 13);
+    let reducer = (accumulator, currentValue) => accumulator + currentValue;
+    if (player1Houses.reduce(reducer) === 0) {
+        board[13] += player2Houses.reduce(reducer);
+        player2Houses.fill(0); //dont work
+        winner = true;
+    } else if (player2Houses.reduce(reducer) === 0) {
+        board[6] += player1Houses.reduce(reducer);
+        player1Houses.fill(0); // dont work
+        winner = true;
+    } else {
+        return;
+    };
+}
+
+function declareWinner() {
+    if (board[6] > board[13]) {
+        prompt.innerHTML = prompts[4];
+    } else if (board[6] < board[13]) {
+        prompt.innerHTML = prompts[5];
+    } else if (board[6] === board[13]) {
+        prompt.innerHTML = prompts[6];
+    }
+}
+
 function render () {
     //take all variable and make inner HTML = '$' + value
+    // setInterval() for each render spaced by 500ms?
+    // maybe setTimeout()
     p1h1Display.innerHTML = `${board[5]}`;
     p1h2Display.innerHTML = `${board[4]}`;
     p1h3Display.innerHTML = `${board[3]}`;

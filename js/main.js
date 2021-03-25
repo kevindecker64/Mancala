@@ -62,6 +62,7 @@ function whoGoes() {
 
 function initialize() {
     player1Move = true;
+    winner = false;
     prompt.innerHTML = prompts[0];
     board.fill(4);
     board[6] = 0;
@@ -80,9 +81,9 @@ function steal(bankIdx, placeHere) {
 }
 
 function playerTurn(evt) {
-    //Pick a non-zero house from your side to tax
     let clicked = evt.target;
     let clickedIdx = parseInt(clicked.id);
+
     if (player1Move === true && player2.clickableSquares.includes(clickedIdx)) {
         return;
     };
@@ -93,15 +94,10 @@ function playerTurn(evt) {
         return;
     };
 
-    //Take that amount in your hand
     playerHand = board[clickedIdx];
-    //Remove all money from that house
     board[clickedIdx] = 0;
 
-    //Place $1 in each house moving counter clockwise
     let placeHere = clickedIdx;
-      //Continue until your hand is empty
-      //Include your bank, but not your opponent's
     for (i = playerHand; i > 0; i--) {
         placeHere++;
         if (player1Move === true && placeHere === player2.bank) {
@@ -115,9 +111,16 @@ function playerTurn(evt) {
         };
         board[placeHere]++;
     };
-
-    //If your last $ lands in your bank
-        //Pick another house from your side to tax
+    
+    checkEndGame()
+    
+    if (winner === true) {
+        declareWinner();
+        resetButton.innerHTML = 'PLAY AGAIN?';
+        render();
+        return;
+    }
+        
     if (player1Move === true && placeHere === 6) {
         prompt.innerHTML = prompts[2];
         render();
@@ -128,32 +131,18 @@ function playerTurn(evt) {
         return;
     };
 
-    //If your last $ lands in an empty house on your side
-    //Place that $, and all $ from opposite house in your bank
     if (player1Move === true && board[placeHere] === 1 && player1.clickableSquares.includes(placeHere)) {
         steal(6, placeHere);
     } else if (player1Move !== true && board[placeHere] === 1 && player2.clickableSquares.includes(placeHere)) {
         steal(13, placeHere);
     };
 
-    checkWinner()
-    if (winner === true) {
-        declareWinner();
-        resetButton.innerHTML = 'PLAY AGAIN?';
-        render();
-        return;
-    }
-
-        
-    //Else change prompt to next player's move
-      //If player 1 just went, set prompt to [1]
-      //If player 2 just went, set prompt to [0]
     player1Move = !player1Move;
     whoGoes();
     render();
 }
 
-function checkWinner() {
+function checkEndGame() {
     let player1Houses = board.slice(0, 6);
     let player2Houses = board.slice(7, 13);
     let reducer = (accumulator, currentValue) => accumulator + currentValue;
@@ -177,7 +166,7 @@ function declareWinner() {
         prompt.innerHTML = prompts[5];
     } else if (board[6] === board[13]) {
         prompt.innerHTML = prompts[6];
-    }
+    };
 }
 
 function render () {
@@ -203,9 +192,5 @@ function render () {
     p1Score.innerHTML = `${board[6]}`;
     p2Score.innerHTML = `${board[13]}`;
 }
-
-
-
-
 
 initialize();

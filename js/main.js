@@ -97,9 +97,21 @@ function checkEndGame() {
   let reducer = (accumulator, currentValue) => accumulator + currentValue;
   if (player1Houses.reduce(reducer) === 0) {
     board[13] += player2Houses.reduce(reducer);
+    board[7] = 0;
+    board[8] = 0;
+    board[9] = 0;
+    board[10] = 0;
+    board[11] = 0;
+    board[12] = 0;
     winner = true;
   } else if (player2Houses.reduce(reducer) === 0) {
     board[6] += player1Houses.reduce(reducer);
+    board[0] = 0;
+    board[1] = 0;
+    board[2] = 0;
+    board[3] = 0;
+    board[4] = 0;
+    board[5] = 0;
     winner = true;
   } else {
     return;

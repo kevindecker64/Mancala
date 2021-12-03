@@ -52,7 +52,7 @@ To create this game I used HTML, CSS and JavaScript
 
 ## Play Here
 
-[Click Here to Play Now](https://kevindecker64.github.io/Mancala/)
+[Click Here to Play Now](https://kevindecker64.github.io/mancala/)
 
 Once inside, all you need to do is click the house you want to activate on your turn and let JavaScript do the rest.
 
